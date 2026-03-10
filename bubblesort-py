@@ -1,0 +1,43 @@
+import random
+import time
+import matplotlib.pyplot as plt
+
+def generate_random(n):
+    return [random.randint(0,10000) for _ in range(n)]
+
+def b_sort(a):
+    n=len(a)
+    for i in range(n-1):
+        for j in range(n-1-i):
+            if a[j+1] <= a[j]:
+                a[j] , a[j+1]= a[j+1] , a[j]
+
+
+sizes=[]
+actual_time=[]
+theoretical_time=[]
+
+with open("b_time.txt",'w') as fp:
+    for n in range(100,10000,400):
+        arr=generate_random(n)
+        start=time.perf_counter() # Records high precision time stamp
+        b_sort(arr)
+
+        end=time.perf_counter()
+        t_t=end-start
+        the_time = (n*n) * 1e-8
+        fp.write(f'{n}{t_t}{the_time} \n')
+        sizes.append(n)
+        actual_time.append(t_t)
+        theoretical_time.append(the_time)
+
+    plt.figure(figsize=(10,6))
+    plt.plot(sizes,actual_time,marker='o', label='actual time')
+    plt.plot(sizes,theoretical_time,linewidth=2, label='thoeretical time')
+    plt.title("Bubble Sort Efficiency in Python")
+    plt.xlabel('Input Size')
+    plt.ylabel('Time(seconds)')
+    plt.grid(True)
+    plt.legend()
+    plt.savefig("b_sort_efficiency_python.png")
+    plt.show()
