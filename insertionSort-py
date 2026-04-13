@@ -1,0 +1,55 @@
+import random
+import time
+import matplotlib.pyplot as plt
+
+def insertion_sort(arr):
+    n = len(arr)
+
+    for i in range(1, n):
+        key = arr[i]
+        j = i - 1
+
+        while j >= 0 and arr[j] > key:
+            arr[j+1] = arr[j]
+            j = j - 1
+
+        arr[j+1] = key
+
+
+sizes = []
+actual_times = []
+theoretical_times = []
+
+# create file
+file = open("i_time.txt", "w")
+
+for n in range(100, 10001, 400):
+    arr = [random.randint(0,10000) for _ in range(n)]
+
+    start = time.time()
+    insertion_sort(arr)
+    end = time.time()
+
+    actual_time = end - start
+    theoretical_time = (n*n) * 1e-8
+
+    sizes.append(n)
+    actual_times.append(actual_time)
+    theoretical_times.append(theoretical_time)
+
+    # write data to file
+    file.write(f"{n} {actual_time:.6f} {theoretical_time:.6f}\n")
+
+file.close()
+
+plt.plot(sizes, actual_times, marker='o', label="Actual Time")
+plt.plot(sizes, theoretical_times, label="Theoretical O(n²)")
+
+plt.title("Insertion Sort Time Efficiency (Python)")
+plt.xlabel("Input Size")
+plt.ylabel("Time (seconds)")
+plt.legend()
+plt.grid(True)
+
+plt.savefig("insertion_python_graph.png")
+plt.show()

@@ -1,0 +1,55 @@
+import random
+import time
+import matplotlib.pyplot as plt
+
+# Quick Sort function
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    
+    pivot = arr[len(arr)//2]
+
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+
+    return quick_sort(left) + middle + quick_sort(right)
+
+
+sizes = []
+actual_times = []
+theoretical_times = []
+
+# create file
+file = open("q_time.txt", "w")
+
+for n in range(100, 10001, 400):
+    arr = [random.randint(0,10000) for _ in range(n)]
+
+    start = time.time()
+    arr = quick_sort(arr)   # run quick sort
+    end = time.time()
+
+    actual_time = end - start
+    theoretical_time = (n * (n.bit_length())) * 1e-7   # O(n log n)
+
+    sizes.append(n)
+    actual_times.append(actual_time)
+    theoretical_times.append(theoretical_time)
+
+    # write data to file
+    file.write(f"{n} {actual_time:.6f} {theoretical_time:.6f}\n")
+
+file.close()
+
+plt.plot(sizes, actual_times, marker='o', label="Actual Time")
+plt.plot(sizes, theoretical_times, label="Theoretical O(n log n)")
+
+plt.title("Quick Sort Time Efficiency (Python)")
+plt.xlabel("Input Size")
+plt.ylabel("Time (seconds)")
+plt.legend()
+plt.grid(True)
+
+plt.savefig("quick_python_graph.png")
+plt.show()
